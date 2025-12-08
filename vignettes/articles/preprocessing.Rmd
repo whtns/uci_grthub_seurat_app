@@ -48,7 +48,7 @@ seuFLViz provides a single command to:
 By default clustering will be run at ten different resolutions between 0.2 and 2.0. Any resolution can be specified by providing the resolution argument as a numeric vector.
 
 ```{r, results=FALSE, eval=FALSE}
-clustered_seu <- clustering_workflow(human_gene_transcript_seu,
+clustered_seu <- clustering_workflow(human_rna_seu,
     experiment_name = "seurat_hu_trans",
     organism = "human"
 )

@@ -13,5 +13,5 @@ convert_v3_to_v5(seu_v3)
 Convert seurat object from v3 to v5 format
 }
 \examples{
-convert_v3_to_v5(human_gene_transcript_seu)
+convert_v3_to_v5(human_rna_seu)
 }

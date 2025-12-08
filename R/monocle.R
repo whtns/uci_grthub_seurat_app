@@ -6,7 +6,7 @@
 #' @export
 #'
 #' @examples
-#' processed_seu <- clustering_workflow(human_gene_transcript_seu)
+#' processed_seu <- clustering_workflow(human_rna_seu)
 #' cds <- convert_seu_to_cds(processed_seu)
 convert_seu_to_cds <- function(seu, resolution = 1, min_expression = 0.05) {
     print(resolution)

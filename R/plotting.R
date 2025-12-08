@@ -254,10 +254,10 @@ plot_multiple_branches_heatmap <- function(cds,
 #'
 #'
 #' # static mode
-#' plot_var(human_gene_transcript_seu, group = "batch", return_plotly = FALSE)
+#' plot_var(human_rna_seu, group = "batch", return_plotly = FALSE)
 #'
 #' # interactive plotly plot
-#' plotly_plot <- plot_var(human_gene_transcript_seu, group = "batch")
+#' plotly_plot <- plot_var(human_rna_seu, group = "batch")
 #' print(plotly_plot)
 #'
 plot_var <- function(seu, group = "batch", embedding = "umap", dims = c(1, 2), highlight = NULL, pt.size = 1.0, return_plotly = FALSE, ...) {
@@ -335,7 +335,7 @@ plotly_settings <- function(plotly_plot, width = 600, height = 700) {
 #'
 #' @examples
 #'
-#' plot_violin(human_gene_transcript_seu, plot_var = "batch", features = c("NRL", "GNAT2"))
+#' plot_violin(human_rna_seu, plot_var = "batch", features = c("NRL", "GNAT2"))
 #'
 plot_violin <- function(seu, plot_var = "batch", plot_vals = NULL, features = "RXRG", assay = "RNA", ...) {
     if (is.null(plot_vals)) {
@@ -371,11 +371,11 @@ plot_violin <- function(seu, plot_var = "batch", plot_vals = NULL, features = "R
 #' @examples
 #'
 #' # static, single feature
-#' plot_feature(human_gene_transcript_seu, embedding = "umap", features = c("NRL"), return_plotly = FALSE)
+#' plot_feature(human_rna_seu, embedding = "umap", features = c("NRL"), return_plotly = FALSE)
 #' # static, multi-feature
-#' plot_feature(human_gene_transcript_seu, embedding = "umap", features = c("RXRG", "NRL"), return_plotly = FALSE)
+#' plot_feature(human_rna_seu, embedding = "umap", features = c("RXRG", "NRL"), return_plotly = FALSE)
 #' # interactive, multi-feature
-#' plotly_plot <- plot_feature(human_gene_transcript_seu, embedding = "umap", features = c("RXRG", "NRL"))
+#' plotly_plot <- plot_feature(human_rna_seu, embedding = "umap", features = c("RXRG", "NRL"))
 #' print(plotly_plot)
 #'
 plot_feature <- function(seu, embedding = c("umap", "pca", "tsne"), features, dims = c(1, 2), return_plotly = FALSE, pt.size = 1.0) {
@@ -459,10 +459,10 @@ plot_cell_cycle_distribution <- function(seu, features) {
 #' @examples
 #'
 #' # interactive mode using "presto"
-#' plot_markers(human_gene_transcript_seu, metavar = "tech", marker_method = "presto", return_plotly = TRUE)
+#' plot_markers(human_rna_seu, metavar = "tech", marker_method = "presto", return_plotly = TRUE)
 #'
 #' # static mode using "presto"
-#' plot_markers(human_gene_transcript_seu, metavar = "tech", marker_method = "genesorteR", return_plotly = FALSE)
+#' plot_markers(human_rna_seu, metavar = "tech", marker_method = "genesorteR", return_plotly = FALSE)
 #'
 plot_markers <- function(seu, metavar = "batch", num_markers = 5, selected_values = NULL, return_plotly = FALSE, marker_method = "presto", seurat_assay = "RNA", hide_technical = NULL, unique_markers = FALSE, p_val_cutoff = 1, ...) {
     Idents(seu) <- seu[[]][[metavar]]
@@ -581,9 +581,9 @@ plot_markers <- function(seu, metavar = "batch", num_markers = 5, selected_value
 #'
 #' @examples
 #' # interactive plotly
-#' plot_readcount(human_gene_transcript_seu, return_plotly = TRUE)
+#' plot_readcount(human_rna_seu, return_plotly = TRUE)
 #' # static plot
-#' plot_readcount(human_gene_transcript_seu, return_plotly = FALSE)
+#' plot_readcount(human_rna_seu, return_plotly = FALSE)
 #'
 #' @importFrom ggplot2 ggplot aes geom_bar theme labs scale_y_log10
 plot_readcount <- function(seu, metavar = "nCount_RNA", color.by = "batch", yscale = "linear", return_plotly = FALSE, ...) {
@@ -644,8 +644,8 @@ plot_readcount <- function(seu, metavar = "nCount_RNA", color.by = "batch", ysca
 #' @examples
 #'
 #' # plot top 50 variable genes
-#' top_50_features <- VariableFeatures(human_gene_transcript_seu)[1:50]
-#' seu_complex_heatmap(human_gene_transcript_seu, features = top_50_features)
+#' top_50_features <- VariableFeatures(human_rna_seu)[1:50]
+#' seu_complex_heatmap(human_rna_seu, features = top_50_features)
 #'
 seu_complex_heatmap <- function(seu, features = NULL, group.by = "ident", cells = NULL,
     layer = "scale.data", assay = NULL, group.bar.height = 0.01,

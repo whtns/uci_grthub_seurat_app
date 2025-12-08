@@ -26,7 +26,7 @@ plot expression all transcripts for an input gene superimposed on an embedding
 }
 \examples{
 
-processed_seu <- clustering_workflow(human_gene_transcript_seu)
+processed_seu <- clustering_workflow(human_rna_seu)
 transcripts_to_plot <- genes_to_transcripts("RXRG")
 plot_all_transcripts(processed_seu, features = transcripts_to_plot)
 

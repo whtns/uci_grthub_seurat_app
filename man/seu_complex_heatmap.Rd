@@ -44,7 +44,7 @@ Plot Annotated Complexheatmap from Seurat object
 \examples{
 
 # plot top 50 variable genes
-top_50_features <- VariableFeatures(human_gene_transcript_seu)[1:50]
-seu_complex_heatmap(human_gene_transcript_seu, features = top_50_features)
+top_50_features <- VariableFeatures(human_rna_seu)[1:50]
+seu_complex_heatmap(human_rna_seu, features = top_50_features)
 
 }

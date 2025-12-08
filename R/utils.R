@@ -180,7 +180,7 @@ prep_plot_genes_in_pseudotime <- function(cds, mygenes, resolution, partition = 
 #' @export
 #'
 #' @examples
-#' logged_seu <- record_experiment_data(human_gene_transcript_seu, experiment_name = "human_gene_transcript", organism = "mouse")
+#' logged_seu <- record_experiment_data(human_rna_seu, experiment_name = "human_gene_transcript", organism = "mouse")
 #' Misc(logged_seu, "experiment")
 #' @importFrom purrr %||%
 record_experiment_data <- function(object, experiment_name = "default_experiment", organism = "human") {
@@ -667,7 +667,7 @@ make_seuFLViz_clean_names <- function(myvec) {
 #' @export
 #'
 #' @examples
-#' convert_v3_to_v5(human_gene_transcript_seu)
+#' convert_v3_to_v5(human_rna_seu)
 convert_v3_to_v5 <- function(seu_v3) {
     seurat_version <- seu_v3@misc$experiment$seurat_version
 

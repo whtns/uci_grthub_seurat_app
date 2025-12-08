@@ -120,7 +120,7 @@ which identifies shared cell states that are present across different
 single cell datasets.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">batches</span> <span class="op">&lt;-</span></span>
-<span>    <span class="va">human_gene_transcript_seu</span><span class="op">[</span>, <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">human_gene_transcript_seu</span><span class="op">$</span><span class="va">Prep.Method</span><span class="op">)</span><span class="op">]</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>    <span class="va">human_rna_seu</span><span class="op">[</span>, <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">human_rna_seu</span><span class="op">$</span><span class="va">Prep.Method</span><span class="op">)</span><span class="op">]</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>    <span class="fu">Seurat</span><span class="fu">::</span><span class="fu"><a href="https://satijalab.org/seurat/reference/SplitObject.html" class="external-link">SplitObject</a></span><span class="op">(</span>split.by <span class="op">=</span> <span class="st">"Prep.Method"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/identity.html" class="external-link">identity</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
@@ -131,7 +131,7 @@ single cell datasets.</p>
 </h2>
 <p>When analyzing data across multiple batches, batch effects can become
 problematic and compromise integration and interpretation of the data.
-For instance, the dataset <code>human_gene_transcript_seu</code>
+For instance, the dataset <code>human_rna_seu</code>
 contains data obtained following two different preparation method. When
 this data is analyzed without integration we notice that in the Zhong
 method cluster 2 is barely represented. from the plot of marker features
@@ -139,8 +139,8 @@ we know that cluster 2 has high expression of features associated with
 cones. this absence of cluster 2 in in Zhong method can become
 problematic during downstream analysis</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">markerp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plot_markers.html">plot_markers</a></span><span class="op">(</span><span class="va">human_gene_transcript_seu</span>, metavar <span class="op">=</span> <span class="st">"gene_snn_res.0.2"</span>, num_markers <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
-<span><span class="va">dp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html" class="external-link">DimPlot</a></span><span class="op">(</span><span class="va">human_gene_transcript_seu</span>, group.by <span class="op">=</span> <span class="st">"gene_snn_res.0.2"</span>, split.by <span class="op">=</span> <span class="st">"Prep.Method"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">markerp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plot_markers.html">plot_markers</a></span><span class="op">(</span><span class="va">human_rna_seu</span>, metavar <span class="op">=</span> <span class="st">"gene_snn_res.0.2"</span>, num_markers <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
+<span><span class="va">dp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html" class="external-link">DimPlot</a></span><span class="op">(</span><span class="va">human_rna_seu</span>, group.by <span class="op">=</span> <span class="st">"gene_snn_res.0.2"</span>, split.by <span class="op">=</span> <span class="st">"Prep.Method"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://patchwork.data-imaginist.com" class="external-link">patchwork</a></span><span class="op">)</span></span>
 <span></span>

@@ -17,6 +17,6 @@ get_transcripts_from_seu(seu, gene, organism = "human")
 Get transcript ids in Seurat objects for one or more gene of interest
 }
 \examples{
-RXRG_transcripts <- get_transcripts_from_seu(human_gene_transcript_seu, "RXRG")
+RXRG_transcripts <- get_transcripts_from_seu(human_rna_seu, "RXRG")
 
 }

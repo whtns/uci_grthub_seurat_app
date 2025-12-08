@@ -21,6 +21,6 @@ record_experiment_data(
 Record the technical metadata for the for a Seurat object
 }
 \examples{
-logged_seu <- record_experiment_data(human_gene_transcript_seu, experiment_name = "human_gene_transcript", organism = "mouse")
+logged_seu <- record_experiment_data(human_rna_seu, experiment_name = "human_gene_transcript", organism = "mouse")
 Misc(logged_seu, "experiment")
 }

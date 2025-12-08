@@ -81,7 +81,7 @@ By default clustering will be run at ten different resolutions between
 argument as a numeric vector.
 
 ``` r
-clustered_seu <- clustering_workflow(human_gene_transcript_seu,
+clustered_seu <- clustering_workflow(human_rna_seu,
     experiment_name = "seurat_hu_trans",
     organism = "human"
 )
@@ -93,7 +93,7 @@ The included dataset is available upon package loading, but is also
 stored at <https://zenodo.org/records/15596099>
 
 ``` r
-minimalSeuratApp(human_gene_transcript_seu)
+minimalSeuratApp(human_rna_seu)
 ```
 
 ## Set up a seurat object
@@ -158,7 +158,7 @@ splitting the dataset into subsets based on a single attribute indicated
 by the split.by argument
 
 ``` r
-split_human <- SplitObject(human_gene_transcript_seu, split.by = "dataset")
+split_human <- SplitObject(human_rna_seu, split.by = "dataset")
 ```
 
 In this example the `split_human` object consists of a list of subsetted

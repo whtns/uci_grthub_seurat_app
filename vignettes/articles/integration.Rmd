@@ -42,7 +42,7 @@ Here, we are using the `panc8` dataset, which is produced in two batches using d
 
 ```{r, eval=FALSE}
 batches <-
-    human_gene_transcript_seu[, !is.na(human_gene_transcript_seu$Prep.Method)] %>%
+    human_rna_seu[, !is.na(human_rna_seu$Prep.Method)] %>%
     Seurat::SplitObject(split.by = "Prep.Method") %>%
     identity()
 
@@ -51,12 +51,12 @@ integrated_seu <- integration_workflow(batches)
 
 # Batch effects are problematic
 
-When analyzing data across multiple batches, batch effects can become problematic and compromise integration and interpretation of the data. For instance, the dataset `human_gene_transcript_seu` contains data obtained following two different preparation method. When this data is analyzed without integration we notice that in the Zhong method cluster 2 is barely represented. from the plot of marker features we know that cluster 2 has high expression of features associated with cones. this absence of cluster 2 in in Zhong method can become problematic during downstream analysis
+When analyzing data across multiple batches, batch effects can become problematic and compromise integration and interpretation of the data. For instance, the dataset `human_rna_seu` contains data obtained following two different preparation method. When this data is analyzed without integration we notice that in the Zhong method cluster 2 is barely represented. from the plot of marker features we know that cluster 2 has high expression of features associated with cones. this absence of cluster 2 in in Zhong method can become problematic during downstream analysis
 
 
 ```{r }
-markerp <- plot_markers(human_gene_transcript_seu, metavar = "gene_snn_res.0.2", num_markers = 10)
-dp <- DimPlot(human_gene_transcript_seu, group.by = "gene_snn_res.0.2", split.by = "Prep.Method")
+markerp <- plot_markers(human_rna_seu, metavar = "gene_snn_res.0.2", num_markers = 10)
+dp <- DimPlot(human_rna_seu, group.by = "gene_snn_res.0.2", split.by = "Prep.Method")
 
 library(patchwork)
 

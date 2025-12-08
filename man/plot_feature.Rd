@@ -30,11 +30,11 @@ will be plotted using \href{https://www.bioconductor.org/packages/devel/bioc/htm
 \examples{
 
 # static, single feature
-plot_feature(human_gene_transcript_seu, embedding = "umap", features = c("NRL"), return_plotly = FALSE)
+plot_feature(human_rna_seu, embedding = "umap", features = c("NRL"), return_plotly = FALSE)
 # static, multi-feature
-plot_feature(human_gene_transcript_seu, embedding = "umap", features = c("RXRG", "NRL"), return_plotly = FALSE)
+plot_feature(human_rna_seu, embedding = "umap", features = c("RXRG", "NRL"), return_plotly = FALSE)
 # interactive, multi-feature
-plotly_plot <- plot_feature(human_gene_transcript_seu, embedding = "umap", features = c("RXRG", "NRL"))
+plotly_plot <- plot_feature(human_rna_seu, embedding = "umap", features = c("RXRG", "NRL"))
 print(plotly_plot)
 
 }
