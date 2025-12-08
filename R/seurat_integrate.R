@@ -2,9 +2,9 @@ old_harmony_integrate <- function(seu_list) {
     seu_list.integrated <- purrr::reduce(seu_list, merge)
     seu_list.integrated <- seurat_preprocess(seu_list.integrated)
     seu_list.integrated <- seurat_reduce_dimensions(seu_list.integrated)
-    seu_list.integrated <- RenameAssays(seu_list.integrated,
-        gene = "RNA"
-    )
+    # seu_list.integrated <- RenameAssays(seu_list.integrated,
+    #     gene = "RNA"
+    # )
     seu_list.integrated@assays[["integrated"]] <- seu_list.integrated@assays[["RNA"]]
     seu_list.integrated <- harmony::RunHarmony(seu_list.integrated,
         group.by.vars = "batch"
@@ -16,9 +16,9 @@ old_harmony_integrate <- function(seu_list) {
     seu_list.integrated <- FindNeighbors(seu_list.integrated,
         reduction = "harmony", dims = 1:30
     ) %>% FindClusters()
-    seu_list.integrated <- RenameAssays(seu_list.integrated,
-        RNA = "gene"
-    )
+    # seu_list.integrated <- RenameAssays(seu_list.integrated,
+    #     RNA = "gene"
+    # )
     seu_list.integrated
 }
 
@@ -32,7 +32,7 @@ old_harmony_integrate <- function(seu_list) {
 #' @examples
 harmony_integrate <- function(seu_list) {
     seu_list.integrated <- purrr::reduce(seu_list, merge)
-    seu_list.integrated@assays[["integrated"]] <- seu_list.integrated@assays[["gene"]]
+    seu_list.integrated@assays[["integrated"]] <- seu_list.integrated@assays[["RNA"]]
     DefaultAssay(seu_list.integrated) <- "integrated"
     seu_list.integrated <- seurat_preprocess(seu_list.integrated)
     seu_list.integrated <- seurat_reduce_dimensions(seu_list.integrated)
@@ -81,7 +81,7 @@ seurat_integrate <- function(seu_list, method = "cca", organism = "human", ...) 
     # Prior to finding anchors, we perform standard preprocessing (log-normalization), and identify variable features individually for each. Note that Seurat v3 implements an improved method for variable feature selection based on a variance stabilizing transformation ("vst")
 
     for (i in 1:length(x = seu_list)) {
-        seu_list[[i]][["gene"]] <- seurat_preprocess(seu_list[[i]][["gene"]], scale = TRUE)
+        seu_list[[i]][["RNA"]] <- seurat_preprocess(seu_list[[i]][["RNA"]], scale = TRUE)
 
         seu_list[[i]]$batch <- names(seu_list)[[i]]
     }

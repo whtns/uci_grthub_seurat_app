@@ -19,7 +19,7 @@ run_seurat_de <- function(seu, cluster1, cluster2, resolution, diffex_scheme = "
         if ("integrated" %in% names(seu@assays)) {
             active_assay <- "integrated"
         } else {
-            active_assay <- "gene"
+            active_assay <- "RNA"
         }
 
 
@@ -65,7 +65,7 @@ run_seurat_de <- function(seu, cluster1, cluster2, resolution, diffex_scheme = "
             }
 
             de <- dplyr::select(de, any_of(de_cols))
-        } else if (featureType == "gene") {
+        } else {
             de_cols <- c("ensgene", "symbol", "p_val", "avg_log2FC", "pct.1", "pct.2", "p_val_adj")
 
             de <-
@@ -115,7 +115,7 @@ run_enrichmentbrowser <- function(seu, cluster_list, de_results, enrichment_meth
     seu <- seu[, c(cluster1_cells, cluster2_cells)]
     seu <- seu[rownames(seu) %in% de_results$t$symbol, ]
 
-    seu[["gene"]]@meta.features <- test_diffex_results
+    seu[["RNA"]]@meta.features <- test_diffex_results
 
     keep_cells <- c(cluster1_cells, cluster2_cells)
     new_idents <- c(rep(0, length(cluster1_cells)), rep(1, length(cluster2_cells)))
@@ -123,14 +123,14 @@ run_enrichmentbrowser <- function(seu, cluster_list, de_results, enrichment_meth
     new_idents <- new_idents[colnames(seu)]
     Idents(seu) <- new_idents
 
-    counts <- GetAssayData(seu, assay = "gene", slot = "counts")
+    counts <- GetAssayData(seu, assay = "RNA", slot = "counts")
     counts <- as.matrix(counts)
     mode(counts) <- "integer"
 
     rowData <- data.frame(
-        FC = seu[["gene"]][[]]$FC,
-        ADJ.PVAL = seu[["gene"]][[]]$ADJ.PVAL,
-        row.names = rownames(seu@assays[["gene"]])
+        FC = seu[["RNA"]][[]]$FC,
+        ADJ.PVAL = seu[["RNA"]][[]]$ADJ.PVAL,
+        row.names = rownames(seu@assays[["RNA"]])
     )
 
     colData <- as.data.frame(seu[[]])
@@ -275,8 +275,8 @@ seuratApp <- function(preset_project, appTitle = "seuFLViz", organism_type = "hu
                 tabName = "findMarkers", icon = icon("bullhorn")
             ), shinydashboard::menuItem("Subset Seurat Input",
                 tabName = "subsetSeurat", icon = icon("filter")
-            ), shinydashboard::menuItem("All Transcripts",
-                tabName = "allTranscripts", icon = icon("sliders-h")
+            # ), shinydashboard::menuItem("All Transcripts",
+            #     tabName = "allTranscripts", icon = icon("sliders-h")
             ), shinydashboard::menuItem("RNA Velocity",
                 tabName = "plotVelocity", icon = icon("tachometer-alt")
             ), shinydashboard::menuItem("Monocle",
@@ -367,11 +367,11 @@ seuratApp <- function(preset_project, appTitle = "seuFLViz", organism_type = "hu
                 h2("Find Markers"),
                 findMarkersui("findmarkers"),
                 plotDimRedui("markerScatter")
-            ), shinydashboard::tabItem(
-                tabName = "allTranscripts",
-                h2("All Transcripts"),
-                plotDimRedui("alltranscripts2"),
-                allTranscriptsui("alltranscripts1")
+            # ), shinydashboard::tabItem(
+            #     tabName = "allTranscripts",
+            #     h2("All Transcripts"),
+            #     plotDimRedui("alltranscripts2"),
+            #     allTranscriptsui("alltranscripts1")
             ),
             shinydashboard::tabItem(
                 tabName = "plotVelocity",
@@ -575,7 +575,7 @@ seuratApp <- function(preset_project, appTitle = "seuFLViz", organism_type = "hu
 
 
         featureType <- reactive({
-            "gene"
+            "RNA"
         })
 
         observe({
@@ -787,14 +787,14 @@ seuratApp <- function(preset_project, appTitle = "seuFLViz", organism_type = "hu
         observe({
             req(featureType())
             req(seu())
-            callModule(
-                allTranscripts, "alltranscripts1", seu, featureType,
-                organism_type
-            )
+            # callModule(
+            #     allTranscripts, "alltranscripts1", seu, featureType,
+            #     organism_type
+            # )
 
-            callModule(plotDimRed, "alltranscripts2", seu, plot_types, featureType,
-                organism_type = organism_type, reductions
-            )
+            # callModule(plotDimRed, "alltranscripts2", seu, plot_types, featureType,
+            #     organism_type = organism_type, reductions
+            # )
         })
 
         prior_gene_set <- reactive({

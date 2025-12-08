@@ -261,7 +261,7 @@ plot_multiple_branches_heatmap <- function(cds,
 #' print(plotly_plot)
 #'
 plot_var <- function(seu, group = "batch", embedding = "umap", dims = c(1, 2), highlight = NULL, pt.size = 1.0, return_plotly = FALSE, ...) {
-    Seurat::DefaultAssay(seu) <- "gene"
+    Seurat::DefaultAssay(seu) <- "RNA"
 
     metadata <- seu[[]][Seurat::Cells(seu), ]
     key <- rownames(metadata)
@@ -337,7 +337,7 @@ plotly_settings <- function(plotly_plot, width = 600, height = 700) {
 #'
 #' plot_violin(human_gene_transcript_seu, plot_var = "batch", features = c("NRL", "GNAT2"))
 #'
-plot_violin <- function(seu, plot_var = "batch", plot_vals = NULL, features = "RXRG", assay = "gene", ...) {
+plot_violin <- function(seu, plot_var = "batch", plot_vals = NULL, features = "RXRG", assay = "RNA", ...) {
     if (is.null(plot_vals)) {
         plot_vals <- unique(seu[[]][[plot_var]])
         plot_vals <- plot_vals[!is.na(plot_vals)]
@@ -379,7 +379,7 @@ plot_violin <- function(seu, plot_var = "batch", plot_vals = NULL, features = "R
 #' print(plotly_plot)
 #'
 plot_feature <- function(seu, embedding = c("umap", "pca", "tsne"), features, dims = c(1, 2), return_plotly = FALSE, pt.size = 1.0) {
-    Seurat::DefaultAssay(seu) <- "gene"
+    Seurat::DefaultAssay(seu) <- "RNA"
 
     metadata <- seu[[]][Seurat::Cells(seu), ]
     key <- rownames(metadata)
@@ -464,7 +464,7 @@ plot_cell_cycle_distribution <- function(seu, features) {
 #' # static mode using "presto"
 #' plot_markers(human_gene_transcript_seu, metavar = "tech", marker_method = "genesorteR", return_plotly = FALSE)
 #'
-plot_markers <- function(seu, metavar = "batch", num_markers = 5, selected_values = NULL, return_plotly = FALSE, marker_method = "presto", seurat_assay = "gene", hide_technical = NULL, unique_markers = FALSE, p_val_cutoff = 1, ...) {
+plot_markers <- function(seu, metavar = "batch", num_markers = 5, selected_values = NULL, return_plotly = FALSE, marker_method = "presto", seurat_assay = "RNA", hide_technical = NULL, unique_markers = FALSE, p_val_cutoff = 1, ...) {
     Idents(seu) <- seu[[]][[metavar]]
 
     # by default only resolution markers are calculated in pre-processing
@@ -772,126 +772,4 @@ seu_complex_heatmap <- function(seu, features = NULL, group.by = "ident", cells 
 
 
 
-#' Plot Transcript Composition
-#'
-#' plot the proportion of reads of a given gene map to each transcript
-#'
-#' @param seu A seurat object
-#' @param gene_symbol Gene symbol of gene of intrest
-#' @param group.by Name of one or more metadata columns to annotate columns by
-#' (for example, orig.ident)
-#' @param standardize
-#' @param drop_zero Drop zero values
-#'
-#' @return
-#' @export
-#'
-#' @examples
-#' plot_transcript_composition(human_gene_transcript_seu, "RXRG", group.by = "gene_snn_res.0.6")
-#'
-plot_transcript_composition <- function(seu, gene_symbol, group.by = "batch", standardize = FALSE, drop_zero = FALSE) {
-    transcripts <- annotables::grch38 %>%
-        dplyr::filter(symbol == gene_symbol) %>%
-        dplyr::left_join(annotables::grch38_tx2gene, by = "ensgene") %>%
-        dplyr::pull(enstxp)
 
-    metadata <- seu@meta.data
-    metadata$sample_id <- NULL
-    metadata <-
-        metadata %>%
-        tibble::rownames_to_column("sample_id") %>%
-        dplyr::select(sample_id, group.by = {{ group.by }})
-
-    data <- FetchData(seu$transcript, vars = transcripts)
-
-    data <- expm1(as.matrix(data))
-
-    data <-
-        data %>%
-        as.data.frame() %>%
-        tibble::rownames_to_column("sample_id") %>%
-        tidyr::pivot_longer(
-            cols = starts_with("ENST"),
-            names_to = "transcript",
-            values_to = "expression"
-        ) %>%
-        dplyr::left_join(metadata, by = "sample_id") %>%
-        dplyr::mutate(
-            group.by = as.factor(group.by),
-            transcript = as.factor(transcript)
-        )
-
-    data <- dplyr::group_by(data, group.by, transcript)
-
-    # drop zero values
-
-    if (drop_zero) {
-        data <- dplyr::filter(data, expression != 0)
-    }
-
-    data <- dplyr::summarize(data, expression = mean(expression))
-
-    position <- ifelse(standardize, "fill", "stack")
-
-    p <- ggplot(
-        data = data,
-        aes(x = group.by, y = expression, fill = transcript)
-    ) +
-        # stat_summary(fun = "mean", geom = "col") +
-        geom_col(stat = "identity", position = position) +
-        theme_minimal() +
-        theme(
-            axis.title.x = element_blank(),
-            axis.text.x = element_text(
-                angle = 45, hjust = 1, vjust = 1, size = 12
-            )
-        ) +
-        labs(title = paste("Mean expression by", group.by, "-", gene_symbol), subtitle = "data scaled by library size then ln transformed") +
-        NULL
-
-    return(list(plot = p, data = data))
-}
-
-#' Plot All Transcripts
-#'
-#' plot expression all transcripts for an input gene superimposed on an embedding
-#'
-#' @param seu A seurat object
-#' @param features gene or vector of transcripts
-#' @param embedding umap
-#' @param from_gene whether to look up transcripts for an input gene
-#'
-#' @return
-#' @export
-#'
-#' @examples
-#'
-#' processed_seu <- clustering_workflow(human_gene_transcript_seu)
-#' transcripts_to_plot <- genes_to_transcripts("RXRG")
-#' plot_all_transcripts(processed_seu, features = transcripts_to_plot)
-#'
-plot_all_transcripts <- function(seu, features, embedding = "umap", from_gene = TRUE, combine = TRUE) {
-    if (from_gene) {
-        features <- genes_to_transcripts(features)
-    }
-
-    features <- features[features %in% rownames(seu[["transcript"]])]
-
-    # transcript_cols <- as.data.frame(t(as.matrix(seu[["transcript"]][features,])))
-
-    transcript_cols <- FetchData(seu, features)
-
-    seu <- AddMetaData(seu, transcript_cols)
-
-    plot_out <- purrr::map(paste0("transcript_", features), ~ plot_feature(seu,
-        embedding = embedding,
-        features = .x, return_plotly = FALSE
-    )) %>%
-        purrr::set_names(features)
-
-    if (combine) {
-        plot_out <- wrap_plots(plot_out)
-    }
-
-    return(plot_out)
-}

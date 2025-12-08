@@ -40,7 +40,7 @@ seurat_integration_pipeline <- function(seu_list, resolution = seq(0.2, 2.0, by 
     integrated_seu <- seurat_cluster(integrated_seu, resolution = resolution, algorithm = algorithm, reduction = reduction, ...)
 
 
-    seurat_assay <- "gene"
+    seurat_assay <- "RNA"
     if ("harmony" %in% names(integrated_seu@reductions)) seurat_assay <- "integrated"
 
     if (find_markers){
@@ -104,7 +104,7 @@ seurat_v5_integration_pipeline <- function(seu, resolution = seq(0.2, 2.0, by = 
   integrated_seu <- seurat_cluster(integrated_seu, resolution = resolution, algorithm = algorithm, reduction = reduction, ...)
 
 
-  seurat_assay <- "gene"
+  seurat_assay <- "RNA"
   if ("harmony" %in% names(integrated_seu@reductions)) seurat_assay <- "integrated"
   integrated_seu <- find_all_markers(integrated_seu, seurat_assay = seurat_assay)
 
@@ -151,10 +151,10 @@ seurat_v5_integration_pipeline <- function(seu, resolution = seq(0.2, 2.0, by = 
 #'
 #' processed_seu <- seurat_process(panc8)
 #'
-seurat_process <- function(seu, assay = "gene", resolution = 0.6, reduction = "pca", organism = "human", ...) {
+seurat_process <- function(seu, assay = "RNA", resolution = 0.6, reduction = "pca", organism = "human", ...) {
     assays <- names(seu@assays)
 
-    assays <- assays[assays %in% c("gene", "transcript")]
+    assays <- assays[assays %in% c("RNA")]
 
     for (assay in assays) {
         seu[[assay]] <- seurat_preprocess(seu[[assay]], scale = TRUE, ...)
@@ -165,7 +165,7 @@ seurat_process <- function(seu, assay = "gene", resolution = 0.6, reduction = "p
 
     seu <- seurat_cluster(seu = seu, resolution = resolution, reduction = reduction, ...)
 
-    seu <- find_all_markers(seu, seurat_assay = "gene")
+    seu <- find_all_markers(seu, seurat_assay = "RNA")
 
     # if (feature == "gene"){
     #   enriched_seu <- tryCatch(getEnrichedPathways(seu), error = function(e) e)

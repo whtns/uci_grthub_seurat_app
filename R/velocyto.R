@@ -1,5 +1,5 @@
 
-#' run velocyto on a gene or transcript level seurat object
+#' run velocyto on a RNA level seurat object
 #'
 #' @param seu a seurat object
 #' @param loom_path path to matching loom file

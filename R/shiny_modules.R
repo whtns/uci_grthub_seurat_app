@@ -42,7 +42,7 @@ plotClustree <- function(input, output, session, seu) {
     output$clustree <- renderPlot({
         req(seu())
 
-        assay <- ifelse("integrated" %in% names(seu()@assays), "integrated", "gene")
+        assay <- ifelse("integrated" %in% names(seu()@assays), "integrated", "RNA")
         # DefaultAssay(seu()) <- assay
         clustree::clustree(seu(), assay = assay)
     })
@@ -95,18 +95,10 @@ plotViolin <- function(input, output, session, seu, featureType, organism_type) 
     ns <- session$ns
     prefill_feature <- reactive({
         req(featureType())
-        if (featureType() == "transcript") {
-            if (organism_type() == "human") {
-                "ENST00000488147"
-            } else if (organism_type() == "mouse") {
-                "ENSG00000488147"
-            }
-        } else if (featureType() == "gene") {
-            if (organism_type() == "human") {
-                "RXRG"
-            } else if (organism_type() == "mouse") {
-                "Rxrg"
-            }
+        if (organism_type() == "human") {
+            "RXRG"
+        } else if (organism_type() == "mouse") {
+            "Rxrg"
         }
     })
     observe({
@@ -211,13 +203,13 @@ plotHeatmap <- function(input, output, session, seu, featureType, organism_type)
         if ("integrated" %in% names(seu()@assays)) {
             assay <- "integrated"
         } else {
-            assay <- "gene"
+            assay <- "RNA"
         }
 
         preset_features <- VariableFeatures(seu(), assay = assay)[1:50]
 
         updateSelectizeInput(session, "customFeature",
-            choices = rownames(seu()@assays[["gene"]]),
+            choices = rownames(seu()@assays[["RNA"]]),
             selected = preset_features, server = TRUE
         )
     })
@@ -248,7 +240,7 @@ plotHeatmap <- function(input, output, session, seu, featureType, organism_type)
         if ("integrated" %in% names(seu()@assays)) {
             assay <- "integrated"
         } else {
-            assay <- "gene"
+            assay <- "RNA"
         }
 
         hm <- seu_complex_heatmap(seu(), features = input$customFeature, assay = assay, group.by = input$colAnnoVar, layer = input$layer, col_arrangement = input$dendroSelect)
@@ -572,25 +564,17 @@ plotDimRed <- function(input, output, session, seu, plot_types, featureType,
     })
     prefill_feature <- reactive({
         req(featureType())
-        if (featureType() == "transcript") {
-            if (organism_type() == "human") {
-                "ENST00000488147"
-            } else if (organism_type() == "mouse") {
-                "ENSG00000488147"
-            }
-        } else if (featureType() == "gene") {
-            if (organism_type() == "human") {
-                "RXRG"
-            } else if (organism_type() == "mouse") {
-                "Rxrg"
-            }
+        if (organism_type() == "human") {
+            "RXRG"
+        } else if (organism_type() == "mouse") {
+            "Rxrg"
         }
     })
     observe({
         req(prefill_feature())
         req(seu())
         updateSelectizeInput(session, "customFeature",
-            choices = rownames(seu()@assays[["gene"]]),
+            choices = rownames(seu()@assays[["RNA"]]),
             selected = prefill_feature(), server = TRUE
         )
     })
@@ -751,7 +735,7 @@ diffexui <- function(id) {
                 )
             ),
             uiOutput(ns("testChoices")),
-            radioButtons(ns("featureType"), "Features to Compare", choices = c("gene", "transcript")),
+            # radioButtons(ns("featureType"), "Features to Compare", choices = c("gene", "transcript")),
             actionButton(
                 ns("diffex"),
                 "Run Differential Expression"
@@ -841,7 +825,7 @@ diffex <- function(input, output, session, seu, featureType, selected_cells, tes
         if ("integrated" %in% names(seu()@assays)) {
             assay <- "integrated"
         } else {
-            assay <- "gene"
+            assay <- "RNA"
         }
     })
 
@@ -904,7 +888,7 @@ diffex <- function(input, output, session, seu, featureType, selected_cells, tes
       w$show()
         if (input$diffex_scheme == "louvain") {
             run_seurat_de(seu(), input$cluster1, input$cluster2,
-                resolution = input$seuratResolution, diffex_scheme = "louvain", input$featureType, tests = input$diffex_method
+                resolution = input$seuratResolution, diffex_scheme = "louvain", "RNA", tests = input$diffex_method
             )
         } else if (input$diffex_scheme == "custom") {
             # req(custom_cluster1())
@@ -919,7 +903,7 @@ diffex <- function(input, output, session, seu, featureType, selected_cells, tes
             ))
             run_seurat_de(seu(), cluster1, cluster2,
                 input$customResolution,
-                diffex_scheme = "feature", input$featureType, tests = input$diffex_method
+                diffex_scheme = "feature", "RNA", tests = input$diffex_method
             )
         }
     })
@@ -992,7 +976,7 @@ findMarkersui <- function(id) {
             uiOutput(ns("valueSelect")),
             radioButtons(ns("markerMethod"), "Method of Marker Selection", choices = c("presto", "genesorteR"), selected = "presto", inline = TRUE),
             sliderInput(ns("pValCutoff"), "P Value cutoff", min = 0.01, max = 1, value = 1),
-            selectizeInput(ns("dotFeature"), "Feature for Marker Plot", choices = NULL),
+            # selectizeInput(ns("dotFeature"), "Feature for Marker Plot", choices = NULL),
             actionButton(ns("plotDots"), "Plot Markers!"),
             downloadButton(ns("downloadMarkerTable"), "Download Markers!"),
             checkboxInput(ns("uniqueMarkers"), "Make Markers Unique", value = FALSE),
@@ -1020,7 +1004,7 @@ findMarkers <- function(input, output, session, seu, plot_types, featureType) {
 
     observe({
         req(seu())
-        updateSelectizeInput(session, "dotFeature", choices = names(seu()@assays), selected = "gene", server = TRUE)
+        updateSelectizeInput(session, "dotFeature", choices = names(seu()@assays), selected = "RNA", server = TRUE)
     })
 
     output$dplottype <- renderUI({
@@ -1038,7 +1022,7 @@ findMarkers <- function(input, output, session, seu, plot_types, featureType) {
         if ("integrated" %in% names(seu()@assays)) {
             assay <- "integrated"
         } else {
-            assay <- "gene"
+            assay <- "RNA"
         }
     })
 
@@ -1063,11 +1047,11 @@ findMarkers <- function(input, output, session, seu, plot_types, featureType) {
 
     # observe({
     #   req(assay())
-    #   Seurat::DefaultAssay(seu()) <- "gene"
+    #   Seurat::DefaultAssay(seu()) <- "RNA"
     # })
 
     marker_plot_return <- eventReactive(input$plotDots, {
-        plot_markers(seu(), metavar = metavar(), num_markers = input$num_markers, selected_values = input$displayValues, marker_method = input$markerMethod, seurat_assay = input$dotFeature, featureType = featureType(), hide_pseudo = input$hidePseudo, unique_markers = input$uniqueMarkers, p_val_cutoff = input$pValCutoff, return_plotly = TRUE)
+        plot_markers(seu(), metavar = metavar(), num_markers = input$num_markers, selected_values = input$displayValues, marker_method = input$markerMethod, seurat_assay = "RNA", featureType = featureType(), hide_pseudo = input$hidePseudo, unique_markers = input$uniqueMarkers, p_val_cutoff = input$pValCutoff, return_plotly = TRUE)
     })
 
     output$markerplot <- plotly::renderPlotly({
@@ -1146,7 +1130,7 @@ plotReadCount <- function(input, output, session, seu, plot_types) {
             if ("integrated" %in% names(seu()@assays)) {
                 assay <- "integrated"
             } else {
-                assay <- "gene"
+                assay <- "RNA"
             }
 
             louvain_resolution <- paste0(assay, "_snn_res.", input$resolution)
@@ -1200,33 +1184,33 @@ ccScore <- function(input, output, session) {
 allTranscriptsui <- function(id) {
     ns <- NS(id)
     tagList(
-        default_helper(
-            seuFLVizBox(
-                title = "Transcript Expression per Gene",
-                selectizeInput(ns("embeddingGene"), "Gene or transcript expression by which to color the plot; eg. 'RXRG'", choices = NULL, selected = NULL),
-                selectizeInput(ns("transcriptSelect"), "Transcript to Plot", choices = NULL),
-                downloadButton(ns("downloadPlot"), "Download Transcript Plots"),
-                selectizeInput(ns("embedding"), "Embedding", choices = NULL, selected = NULL),
-                plotly::plotlyOutput(ns("transcriptPlot")),
-                # uiOutput(ns("plotlys")),
-                width = 6
-            ),
-            type = "markdown", content = "allTranscripts"
-        ),
-        default_helper(
-            seuFLVizBox(
-                title = "Transcript Expression per Gene",
-                selectizeInput(ns("compositionGene"), "Gene or transcript expression by which to color the plot; eg. 'RXRG'", choices = NULL, selected = NULL),
-                selectizeInput(ns("groupby"), "Group by:", choices = NULL, selected = NULL),
-                actionButton(ns("plotComposition"), "Plot transcript composition"),
-                checkboxInput(ns("standardizeExpression"), "Standardize Expression", value = FALSE),
-                checkboxInput(ns("dropZero"), "Drop Zero Values", value = FALSE),
-                plotly::plotlyOutput(ns("compositionPlot")),
-                DT::DTOutput(ns("compositionDT")),
-                width = 6
-            ),
-            type = "markdown", content = "allTranscripts"
-        )
+        # default_helper(
+        #     seuFLVizBox(
+        #         title = "Transcript Expression per Gene",
+        #         selectizeInput(ns("embeddingGene"), "Gene or transcript expression by which to color the plot; eg. 'RXRG'", choices = NULL, selected = NULL),
+        #         selectizeInput(ns("transcriptSelect"), "Transcript to Plot", choices = NULL),
+        #         downloadButton(ns("downloadPlot"), "Download Transcript Plots"),
+        #         selectizeInput(ns("embedding"), "Embedding", choices = NULL, selected = NULL),
+        #         plotly::plotlyOutput(ns("transcriptPlot")),
+        #         # uiOutput(ns("plotlys")),
+        #         width = 6
+        #     ),
+        #     type = "markdown", content = "allTranscripts"
+        # ),
+        # default_helper(
+        #     seuFLVizBox(
+        #         title = "Transcript Expression per Gene",
+        #         selectizeInput(ns("compositionGene"), "Gene or transcript expression by which to color the plot; eg. 'RXRG'", choices = NULL, selected = NULL),
+        #         selectizeInput(ns("groupby"), "Group by:", choices = NULL, selected = NULL),
+        #         actionButton(ns("plotComposition"), "Plot transcript composition"),
+        #         checkboxInput(ns("standardizeExpression"), "Standardize Expression", value = FALSE),
+        #         checkboxInput(ns("dropZero"), "Drop Zero Values", value = FALSE),
+        #         plotly::plotlyOutput(ns("compositionPlot")),
+        #         DT::DTOutput(ns("compositionDT")),
+        #         width = 6
+        #     ),
+        #     type = "markdown", content = "allTranscripts"
+        # )
     )
 }
 
@@ -1246,76 +1230,76 @@ allTranscripts <- function(input, output, session, seu,
     featureType, organism_type) {
     ns <- session$ns
 
-    observe({
-        req(seu())
-        updateSelectizeInput(session, "compositionGene", choices = rownames(seu()[["gene"]]), selected = "RXRG", server = TRUE)
-        updateSelectizeInput(session, "embeddingGene", choices = rownames(seu()[["gene"]]), selected = "RXRG", server = TRUE)
+    # observe({
+    #     req(seu())
+    #     updateSelectizeInput(session, "compositionGene", choices = rownames(seu()[["gene"]]), selected = "RXRG", server = TRUE)
+    #     updateSelectizeInput(session, "embeddingGene", choices = rownames(seu()[["gene"]]), selected = "RXRG", server = TRUE)
 
-        formatted_col_names <- colnames(seu()@meta.data) %>%
-            make_seuFLViz_clean_names()
+    #     formatted_col_names <- colnames(seu()@meta.data) %>%
+    #         make_seuFLViz_clean_names()
 
-        updateSelectizeInput(session, "groupby", choices = formatted_col_names, selected = "batch", server = TRUE)
-    })
+    #     updateSelectizeInput(session, "groupby", choices = formatted_col_names, selected = "batch", server = TRUE)
+    # })
 
-    transcripts <- reactive({
-        req(seu())
-        if ("transcript" %in% names(seu()@assays)) {
-            get_transcripts_from_seu(seu(), input$embeddingGene, organism = organism_type())
-        }
-    })
+    # transcripts <- reactive({
+    #     req(seu())
+    #     if ("transcript" %in% names(seu()@assays)) {
+    #         get_transcripts_from_seu(seu(), input$embeddingGene, organism = organism_type())
+    #     }
+    # })
 
-    observe({
-        req(seu())
-        req(transcripts())
-        updateSelectizeInput(session, "embedding", choices = c("pca", "tsne", "umap"), selected = "umap", server = TRUE)
-        updateSelectizeInput(session, "transcriptSelect", choices = transcripts(), server = TRUE)
-    })
+    # observe({
+    #     req(seu())
+    #     req(transcripts())
+    #     updateSelectizeInput(session, "embedding", choices = c("pca", "tsne", "umap"), selected = "umap", server = TRUE)
+    #     updateSelectizeInput(session, "transcriptSelect", choices = transcripts(), server = TRUE)
+    # })
 
-    composition_plot <- eventReactive(input$plotComposition, {
-        plot_transcript_composition(seu(), gene_symbol = input$compositionGene, group.by = input$groupby, standardize = input$standardizeExpression, drop_zero = input$dropZero)
-    })
+    # composition_plot <- eventReactive(input$plotComposition, {
+    #     plot_transcript_composition(seu(), gene_symbol = input$compositionGene, group.by = input$groupby, standardize = input$standardizeExpression, drop_zero = input$dropZero)
+    # })
 
-    output$compositionPlot <- plotly::renderPlotly({
-        composition_plot()$plot %>%
-            plotly::ggplotly(height = 400) %>%
-            plotly_settings() %>%
-            plotly::toWebGL() %>%
-            # plotly::partial_bundle() %>%
-            identity()
-    })
+    # output$compositionPlot <- plotly::renderPlotly({
+    #     composition_plot()$plot %>%
+    #         plotly::ggplotly(height = 400) %>%
+    #         plotly_settings() %>%
+    #         plotly::toWebGL() %>%
+    #         # plotly::partial_bundle() %>%
+    #         identity()
+    # })
 
-    output$compositionDT <- DT::renderDT({
-        DT::datatable(composition_plot()$data,
-            extensions = "Buttons",
-            options = list(dom = "Bft", buttons = c(
-                "copy",
-                "csv"
-            ), scrollX = "100px", scrollY = "400px")
-        )
-    })
+    # output$compositionDT <- DT::renderDT({
+    #     DT::datatable(composition_plot()$data,
+    #         extensions = "Buttons",
+    #         options = list(dom = "Bft", buttons = c(
+    #             "copy",
+    #             "csv"
+    #         ), scrollX = "100px", scrollY = "400px")
+    #     )
+    # })
 
-    pList <- reactive({
-        req(transcripts())
-        pList <- plot_all_transcripts(seu(), transcripts(), input$embedding, from_gene = FALSE, combine = FALSE)
-    })
+    # pList <- reactive({
+    #     req(transcripts())
+    #     pList <- plot_all_transcripts(seu(), transcripts(), input$embedding, from_gene = FALSE, combine = FALSE)
+    # })
 
-    output$transcriptPlot <- plotly::renderPlotly({
-        pList()[[input$transcriptSelect]] %>%
-            plotly::ggplotly(height = 400) %>%
-            plotly_settings() %>%
-            plotly::toWebGL()
-    })
+    # output$transcriptPlot <- plotly::renderPlotly({
+    #     pList()[[input$transcriptSelect]] %>%
+    #         plotly::ggplotly(height = 400) %>%
+    #         plotly_settings() %>%
+    #         plotly::toWebGL()
+    # })
 
-    output$downloadPlot <- downloadHandler(
-        filename = function() {
-            paste(input$embeddingGene, "_transcripts.pdf", sep = "")
-        },
-        content = function(file) {
-            pdf(file)
-            map(pList(), print)
-            dev.off()
-        }
-    )
+    # output$downloadPlot <- downloadHandler(
+    #     filename = function() {
+    #         paste(input$embeddingGene, "_transcripts.pdf", sep = "")
+    #     },
+    #     content = function(file) {
+    #         pdf(file)
+    #         map(pList(), print)
+    #         dev.off()
+    #     }
+    # )
 }
 
 #' RNA Velocity UI Module
@@ -1389,7 +1373,7 @@ plotVelocity <- function(input, output, session, object, loom_path) {
         if (query_experiment(object(), "integrated")) {
           experiment <- "integrated"
         } else {
-          experiment <- "gene"
+          experiment <- "RNA"
         }
 
         loom_object <- merge_loom(object(), loom_path)
@@ -1433,7 +1417,7 @@ plotVelocity <- function(input, output, session, object, loom_path) {
     if (query_experiment(object(), "integrated")) {
       experiment <- "integrated"
     } else {
-      experiment <- "gene"
+      experiment <- "RNA"
     }
     scvelo_expression(loom_object(), colour_by = input$varSelect, embedding = input$embedding)
   })
@@ -1501,7 +1485,7 @@ monocleui <- function(id) {
         fluidRow(
             seuFLVizBox(
                 title = "calculate pseudotime",
-                radioButtons(ns("diffexFeature"), "Feature for differential expression", choices = c("gene", "transcript")),
+                # radioButtons(ns("diffexFeature"), "Feature for differential expression", choices = c("gene", "transcript")),
                 actionButton(ns("calcPtimeGenes"), "Find Pseudotime Correlated Genes"),
                 sliderInput(ns("qvalThreshold"), "Set q value threshold for module calculation", min = 0.01, 0.1, value = 0.05, step = 0.01),
                 textOutput("pseudotimeMessages"),
@@ -1586,7 +1570,7 @@ monocle <- function(input, output, session, seu, plot_types, featureType,
         if ("integrated" %in% names(seu()@assays)) {
             assay <- "integrated"
         } else {
-            assay <- "gene"
+            assay <- "RNA"
         }
 
         paste0(assay, "_snn_res.", input$cdsResolution)
@@ -1652,7 +1636,7 @@ monocle <- function(input, output, session, seu, plot_types, featureType,
                 if (any(stringr::str_detect(colnames(colData(cds_rvs$traj)), "integrated"))) {
                     paste0("integrated", "_snn_res.", input$cdsResolution)
                 } else {
-                    paste0("gene", "_snn_res.", input$cdsResolution)
+                    paste0("RNA", "_snn_res.", input$cdsResolution)
                 }
             })
             plot_cds(cds_rvs$traj, color_cells_by = cluster_resolution())
@@ -1682,7 +1666,7 @@ monocle <- function(input, output, session, seu, plot_types, featureType,
                 if (any(stringr::str_detect(colnames(colData(cds_rvs$traj)), "integrated"))) {
                     paste0("integrated", "_snn_res.", input$cdsResolution)
                 } else {
-                    paste0("gene", "_snn_res.", input$cdsResolution)
+                    paste0("RNA", "_snn_res.", input$cdsResolution)
                 }
             })
             plot_cds(cds_rvs$traj, color_cells_by = cluster_resolution())
@@ -1759,7 +1743,7 @@ monocle <- function(input, output, session, seu, plot_types, featureType,
 
     # markermarker
     observeEvent(input$calcPtimeGenes, {
-        req(input$diffexFeature)
+        # req(input$diffexFeature)
         if (req(cds_rvs$selected["ptime"])) {
             # markermarker
             # cds_rvs$traj  <- swap_counts_from_feature(cds_rvs$traj, input$diffexFeature)
@@ -2322,7 +2306,7 @@ plotCoverage <- function(input, output, session, seu, plot_types, proj_dir, orga
 
     observe({
         req(seu())
-        updateSelectizeInput(session, "geneSelect", choices = rownames(seu()[["gene"]]), server = TRUE)
+        updateSelectizeInput(session, "geneSelect", choices = rownames(seu()[["RNA"]]), server = TRUE)
 
         formatted_col_names <- colnames(seu()@meta.data) %>%
             make_seuFLViz_clean_names()

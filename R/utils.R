@@ -18,7 +18,7 @@ format_new_metadata <- function(seu, datapath) {
     new_meta <- tibble::column_to_rownames(new_meta, rowname_col)
 
     seu <- Seurat::AddMetaData(seu, new_meta)
-    DefaultAssay(seu) <- "gene"
+    DefaultAssay(seu) <- "RNA"
     ncalc <- Seurat:::CalcN(seu)
     seu$nFeature_RNA <- ncalc$nFeature
     seu$nCount_RNA <- ncalc$nCount
@@ -129,25 +129,6 @@ list_plot_types <- function(seu) {
     return(plot_types)
 }
 
-#' Get Transcripts in Seurat Object
-#'
-#' Get transcript ids in Seurat objects for one or more gene of interest
-#'
-#' @param seu A seurat object
-#' @param gene Gene of intrest
-#' @param organism Organism
-#'
-#' @return
-#' @export
-#'
-#' @examples
-#' RXRG_transcripts <- get_transcripts_from_seu(human_gene_transcript_seu, "RXRG")
-#'
-get_transcripts_from_seu <- function(seu, gene, organism = "human") {
-    transcripts <- genes_to_transcripts(gene, organism)
-
-    transcripts <- transcripts[transcripts %in% rownames(GetAssay(seu, "transcript"))]
-}
 
 #' Title
 #'
@@ -173,7 +154,7 @@ prep_plot_genes_in_pseudotime <- function(cds, mygenes, resolution, partition = 
     if (any(grepl("integrated", colnames(colData(cds))))) {
         default_assay <- "integrated"
     } else {
-        default_assay <- "gene"
+        default_assay <- "RNA"
     }
 
     color_cells_by <- paste0(default_assay, "_snn_res.", resolution)
@@ -270,9 +251,9 @@ update_seuFLViz_object <- function(seu_path, feature, resolution = seq(0.2, 2.0,
         seu <- convert_seu_list_to_multimodal(seu)
         # seu <- Seurat::UpdateSeuratObject(seu)
     } else if (all(names(seu@assays) == "RNA")) {
-        seu <- RenameAssays(seu, RNA = "gene")
+        # seu <- RenameAssays(seu, RNA = "gene")
     } else if (identical(names(seu@assays), c("RNA", "integrated"))) {
-        seu <- RenameAssays(seu, RNA = "gene")
+        # seu <- RenameAssays(seu, RNA = "gene")
     }
 
     if(length(seu@project.name) > 1){
@@ -291,7 +272,7 @@ update_seuFLViz_object <- function(seu_path, feature, resolution = seq(0.2, 2.0,
     if ("integrated" %in% names(seu@assays)) {
         default_assay <- "integrated"
     } else {
-        default_assay <- "gene"
+        default_assay <- "RNA"
     }
 
     DefaultAssay(seu) <- default_assay
@@ -317,8 +298,8 @@ update_seuFLViz_object <- function(seu_path, feature, resolution = seq(0.2, 2.0,
 
     # update human gene symbols to grch38
     old_symbol <- "CTC-378H22.2"
-    if (old_symbol %in% rownames(seu[["gene"]])) {
-        for (i in names(seu@assays)[names(seu@assays) %in% c("gene", "integrated")]) {
+    if (old_symbol %in% rownames(seu[["RNA"]])) {
+        for (i in names(seu@assays)[names(seu@assays) %in% c("RNA", "integrated")]) {
             # seu <- update_human_gene_symbols(seu, assay = i)
         }
     }
@@ -329,7 +310,7 @@ update_seuFLViz_object <- function(seu_path, feature, resolution = seq(0.2, 2.0,
             seu <- seurat_cluster(seu = seu, resolution = resolution, reduction = "pca", ...)
         }
 
-        for (i in names(seu@assays)[names(seu@assays) %in% c("gene", "integrated")]) {
+        for (i in names(seu@assays)[names(seu@assays) %in% c("RNA", "integrated")]) {
             seu <- find_all_markers(seu, seurat_assay = i)
         }
 
@@ -353,14 +334,14 @@ update_seuFLViz_object <- function(seu_path, feature, resolution = seq(0.2, 2.0,
 #' Recalculate counts/features per cell for a seurat object
 #'
 #' @param seu A seurat object
-#' @param assay Assay to use, Default = "gene"
+#' @param assay Assay to use, Default = "RNA"
 #' @param slot
 #'
 #' @return
 #' @export
 #'
 #' @examples
-seu_calcn <- function(seu, assay = "gene", slot = "counts") {
+seu_calcn <- function(seu, assay = "RNA", slot = "counts") {
     n.calc <- Seurat:::CalcN(object = GetAssay(seu, assay))
     if (!is.null(x = n.calc)) {
         names(x = n.calc) <- paste(names(x = n.calc), assay, sep = "_")
@@ -649,29 +630,13 @@ swap_counts_from_feature <- function(cds, featureType) {
 #'
 #' @examples
 convert_seu_list_to_multimodal <- function(seu_list) {
-    colnames(seu_list[["gene"]]@meta.data) <- gsub("RNA_", "gene_", colnames(seu_list[["gene"]]@meta.data))
-
-    multimodal_seu <- seu_list$gene
-    multimodal_seu <- RenameAssays(multimodal_seu, RNA = "gene")
-
-    if ("transcript" %in% names(seu_list)) {
-        if (identical(length(Cells(seu_list$gene)), length(Cells(seu_list$transcript)))) {
-            colnames(seu_list[["transcript"]]@meta.data) <- gsub("RNA_", "transcript_", colnames(seu_list[["transcript"]]@meta.data))
-            multimodal_seu[["transcript"]] <- seu_list$transcript$RNA
-            transcript_markers <- grepl("transcript_", names(seu_list$transcript@meta.data))
-            transcript_cluster_cols <- seu_list[["transcript"]]@meta.data[transcript_markers]
-            if (length(transcript_cluster_cols) > 0) {
-                multimodal_seu <- AddMetaData(multimodal_seu, transcript_cluster_cols)
-            }
-        }
+    if ("gene" %in% names(seu_list)) {
+        multimodal_seu <- seu_list$gene
+    } else if ("RNA" %in% names(seu_list)) {
+        multimodal_seu <- seu_list$RNA
+    } else {
+        stop("No gene or RNA assay found in seu_list")
     }
-
-    marker_names <- names(Misc(multimodal_seu)[["markers"]])
-
-    if (!is.null(multimodal_seu@misc$markers)) {
-        names(multimodal_seu@misc$markers) <- gsub("RNA", "gene", marker_names)
-    }
-
 
     return(multimodal_seu)
 }
@@ -709,13 +674,17 @@ convert_v3_to_v5 <- function(seu_v3) {
     if (seurat_version < "5.0.0" || is.null(seurat_version)) {
         meta <- seu_v3@meta.data
 
-        seu_v5 <- CreateSeuratObject(counts = seu_v3$gene@counts, data = seu_v3$gene@data, assay = "gene", meta.data = meta)
+        if ("gene" %in% names(seu_v3@assays)) {
+             counts <- seu_v3$gene@counts
+             data <- seu_v3$gene@data
+        } else {
+             counts <- seu_v3$RNA@counts
+             data <- seu_v3$RNA@data
+        }
 
-        transcript_assay.v5 <- CreateAssay5Object(counts = seu_v3$transcript@counts, data = seu_v3$transcript@data)
-        seu_v5$transcript <- transcript_assay.v5
+        seu_v5 <- CreateSeuratObject(counts = counts, data = data, assay = "RNA", meta.data = meta)
 
-        seu_v5$gene <- seurat_preprocess(seu_v5$gene, normalize = FALSE)
-        seu_v5$transcript <- seurat_preprocess(seu_v5$transcript, normalize = FALSE)
+        seu_v5$RNA <- seurat_preprocess(seu_v5$RNA, normalize = FALSE)
 
         # seu_v5 <- clustering_workflow(seu_v5)
         seu_v5@reductions <- seu_v3@reductions

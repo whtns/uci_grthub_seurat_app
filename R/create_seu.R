@@ -114,14 +114,14 @@ seu_from_tximport <- function(txi, meta_tbl, ...) {
     meta_tbl <- meta_tbl[colnames(gene_expression), ]
 
     # create gene assay
-    seu <- Seurat::CreateSeuratObject(counts = gene_expression, project = expid, assay = "gene", meta.data = meta_tbl)
-    seu@assays[["gene"]] <- AddMetaData(seu@assays[["gene"]], featuredata)
+    seu <- Seurat::CreateSeuratObject(counts = gene_expression, project = expid, assay = "RNA", meta.data = meta_tbl)
+    seu@assays[["RNA"]] <- AddMetaData(seu@assays[["RNA"]], featuredata)
 
-    if ("transcript" %in% names(txi)) {
-        # create transcript assay
-        transcript_expression <- as.matrix(txi$transcript$counts)
-        seu[["transcript"]] <- CreateAssayObject(transcript_expression)
-    }
+    # if ("transcript" %in% names(txi)) {
+    #     # create transcript assay
+    #     transcript_expression <- as.matrix(txi$transcript$counts)
+    #     seu[["transcript"]] <- CreateAssayObject(transcript_expression)
+    # }
 
     # add default batch if missing
     seu$batch <- seu@project.name
@@ -156,7 +156,7 @@ seu_from_tibbles <- function(exp_tbl, feature, meta_tbl, ...) {
 
     meta_tbl <- meta_tbl[colnames(exp_tbl), ]
 
-    seu <- Seurat::CreateSeuratObject(counts = exp_tbl, project = expid, assay = "gene", meta.data = meta_tbl)
+    seu <- Seurat::CreateSeuratObject(counts = exp_tbl, project = expid, assay = "RNA", meta.data = meta_tbl)
 
     # add default batch if missing
     seu$batch <- seu@project.name
@@ -178,7 +178,7 @@ seu_from_tibbles <- function(exp_tbl, feature, meta_tbl, ...) {
 #'
 #' @examples
 filter_low_rc_cells <- function(seu, read_thresh = 1e5) {
-    counts <- as.matrix(seu@assays[["gene"]]@counts)
+    counts <- as.matrix(seu@assays[["RNA"]]@counts)
 
     counts <- colSums(counts)
 

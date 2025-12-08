@@ -61,7 +61,7 @@ seurat_preprocess <- function(assay, scale = TRUE, normalize = TRUE, features = 
 #' markers_stashed_seu <- find_all_markers(panc8)
 #' marker_genes <- Misc(markers_stashed_seu, "markers")
 #' str(marker_genes)
-find_all_markers <- function(seu, metavar = NULL, seurat_assay = "gene", ...) {
+find_all_markers <- function(seu, metavar = NULL, seurat_assay = "RNA", ...) {
     if (is.null(metavar)) {
         resolutions <- colnames(seu[[]])[grepl(paste0(seurat_assay, "_snn_res."), colnames(seu[[]]))]
 

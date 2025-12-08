@@ -8,7 +8,7 @@
 #' @export
 #'
 #' @examples
-add_census_slot <- function(seu, assay = "gene", slot = "counts") {
+add_census_slot <- function(seu, assay = "RNA", slot = "counts") {
     data <- Seurat::GetAssayData(seu, assay = assay, slot = slot)
 
     data <- floor(data)
@@ -39,7 +39,7 @@ add_census_slot <- function(seu, assay = "gene", slot = "counts") {
 
     attributes(seu)$census <- Biobase::exprs(monocle_cds)
 
-    seu[["census"]] <- seu[["gene"]]
+    seu[["census"]] <- seu[["RNA"]]
     seu <- SetAssayData(seu, slot = "data", new.data = Biobase::exprs(monocle_cds), assay = "census")
 
     return(seu)
@@ -53,7 +53,7 @@ add_census_slot <- function(seu, assay = "gene", slot = "counts") {
 #' @export
 #'
 #' @examples
-convert_seuv3_to_monoclev2 <- function(seu, assay = "gene", slot = "data", return_census = FALSE, sig_slice = 5000) {
+convert_seuv3_to_monoclev2 <- function(seu, assay = "RNA", slot = "data", return_census = FALSE, sig_slice = 5000) {
     # Load Seurat object
     # Extract data, phenotype data, and feature data from the SeuratObject
     # data <- as(as.matrix(seu@assays[["gene"]]@counts), "sparseMatrix")
@@ -214,7 +214,7 @@ convert_seuv3_to_monoclev2 <- function(seu, assay = "gene", slot = "data", retur
 #' @export
 #'
 #' @examples
-convert_monoclev2_to_seuv3 <- function(seu, assay = "gene", slot = "data", return_census = FALSE, sig_slice = 5000) {
+convert_monoclev2_to_seuv3 <- function(seu, assay = "RNA", slot = "data", return_census = FALSE, sig_slice = 5000) {
     # Load Seurat object
     # Extract data, phenotype data, and feature data from the SeuratObject
     # data <- as(as.matrix(seu@assays[["gene"]]@counts), "sparseMatrix")

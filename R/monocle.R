@@ -28,14 +28,14 @@ convert_seu_to_cds <- function(seu, resolution = 1, min_expression = 0.05) {
     if ("integrated" %in% names(seu@assays)) {
         default_assay <- "integrated"
     } else {
-        default_assay <- "gene"
+        default_assay <- "RNA"
     }
 
     DefaultAssay(seu) <- default_assay
 
-    expression_matrix <- Seurat::GetAssayData(seu, slot = "data", assay = "gene")
+    expression_matrix <- Seurat::GetAssayData(seu, slot = "data", assay = "RNA")
 
-    count_matrix <- Seurat::GetAssayData(seu, slot = "counts", assay = "gene")
+    count_matrix <- Seurat::GetAssayData(seu, slot = "counts", assay = "RNA")
 
     count_matrix <- count_matrix[row.names(expression_matrix), ]
     count_matrix <- count_matrix[, Matrix::colSums(count_matrix) != 0]
@@ -129,7 +129,7 @@ learn_graph_by_resolution <- function(cds, seu, resolution = 1) {
     if (any(grepl("integrated", names(cds@colData)))) {
         default_assay <- "integrated"
     } else {
-        default_assay <- "gene"
+        default_assay <- "RNA"
     }
 
     cds <- monocle3::cluster_cells(cds)
@@ -162,7 +162,7 @@ plot_cds <- function(cds, color_cells_by = NULL, genes = NULL, return_plotly = T
     if (any(grepl("integrated", names(cds@colData)))) {
         default_assay <- "integrated"
     } else {
-        default_assay <- "gene"
+        default_assay <- "RNA"
     }
 
     # if (color_cells_by == "louvain_cluster"){
@@ -213,7 +213,7 @@ plot_pseudotime <- function(cds, resolution, color_cells_by = NULL, genes = NULL
     if (any(grepl("integrated", colnames(cds@colData)))) {
         default_assay <- "integrated"
     } else {
-        default_assay <- "gene"
+        default_assay <- "RNA"
     }
 
 
@@ -260,7 +260,7 @@ plot_monocle_features <- function(cds, resolution, genes = NULL, ...) {
     if (any(grepl("integrated", colnames(cds@colData)))) {
         default_assay <- "integrated"
     } else {
-        default_assay <- "gene"
+        default_assay <- "RNA"
     }
 
     cds_plot <- plot_cells(cds,
@@ -867,7 +867,7 @@ plot_cells <- function(cds, x = 1, y = 2, reduction_method = c(
 #' @examples
 threshold_monocle_genes <- function(seu, cds, min_expression = 0.05) {
     # browser()
-    agg_mat <- Seurat::GetAssayData(seu, assay = "gene") %>%
+    agg_mat <- Seurat::GetAssayData(seu, assay = "RNA") %>%
         as.matrix()
 
     lgl_agg_mat <- agg_mat > min_expression
@@ -912,7 +912,7 @@ monocle_module_heatmap <- function(cds, pr_deg_ids, seu_resolution, cells = NULL
     if (any(grepl("integrated", colnames(cds@colData)))) {
         default_assay <- "integrated"
     } else {
-        default_assay <- "gene"
+        default_assay <- "RNA"
     }
 
     seu_resolution <- paste0(default_assay, "_snn_res.", seu_resolution)

@@ -64,7 +64,7 @@ integration_workflow <- function(batches, excluded_cells = NULL, resolution = se
 #'
 #' Cluster and Reduce Dimensions of a seurat object
 #'
-#' @param feature_seus list of seurat objects named according to feature of interest ("gene" or "transcript")
+#' @param seu seurat object
 #' @param excluded_cells named list of cells to exclude
 #' @param resolution resolution(s) to use for clustering cells
 #' @param organism Organism
