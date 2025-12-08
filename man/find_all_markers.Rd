@@ -4,7 +4,7 @@
 \alias{find_all_markers}
 \title{Find All Markers}
 \usage{
-find_all_markers(seu, metavar = NULL, seurat_assay = "gene", ...)
+find_all_markers(seu, metavar = NULL, seurat_assay = "RNA", ...)
 }
 \arguments{
 \item{seu}{A seurat object.}

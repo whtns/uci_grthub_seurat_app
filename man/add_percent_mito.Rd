@@ -4,7 +4,7 @@
 \alias{add_percent_mito}
 \title{Annotate percent mitochondrial reads per cell}
 \usage{
-add_percent_mito(seu, organism = organism, seurat_assay = "gene")
+add_percent_mito(seu, organism = organism, seurat_assay = "RNA")
 }
 \arguments{
 \item{seu}{A seurat object}

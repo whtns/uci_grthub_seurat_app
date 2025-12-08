@@ -11,7 +11,7 @@ plot_markers(
   selected_values = NULL,
   return_plotly = FALSE,
   marker_method = "presto",
-  seurat_assay = "gene",
+  seurat_assay = "RNA",
   hide_technical = NULL,
   unique_markers = FALSE,
   p_val_cutoff = 1,

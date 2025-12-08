@@ -24,7 +24,7 @@ plot_scvelo(
 a SingleCellExperiment object with velocity calculated
 }
 \description{
-run scvelo on a gene or transcript level object
+run scvelo on a RNA level object
 }
 \examples{
 chevreul_sce <- chevreuldata::human_gene_transcript_sce()

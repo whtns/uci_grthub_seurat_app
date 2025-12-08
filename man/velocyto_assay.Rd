@@ -2,7 +2,7 @@
 % Please edit documentation in R/velocyto.R
 \name{velocyto_assay}
 \alias{velocyto_assay}
-\title{run velocyto on a gene or transcript level seurat object}
+\title{run velocyto on a RNA level seurat object}
 \usage{
 velocyto_assay(seu, loom_path, fit.quantile = 0.05, check_loom = FALSE, ...)
 }
@@ -14,5 +14,5 @@ velocyto_assay(seu, loom_path, fit.quantile = 0.05, check_loom = FALSE, ...)
 \item{...}{}
 }
 \description{
-run velocyto on a gene or transcript level seurat object
+run velocyto on a RNA level seurat object
 }

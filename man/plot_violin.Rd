@@ -9,7 +9,7 @@ plot_violin(
   plot_var = "batch",
   plot_vals = NULL,
   features = "RXRG",
-  assay = "gene",
+  assay = "RNA",
   ...
 )
 }

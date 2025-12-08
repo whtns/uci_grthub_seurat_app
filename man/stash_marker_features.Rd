@@ -28,6 +28,6 @@ Marker Genes will be stored in slot \verb{@misc$markers}
 }
 \examples{
 
-seu <- stash_marker_features(metavar = "batch", seu, seurat_assay = "gene")
+seu <- stash_marker_features(metavar = "batch", seu, seurat_assay = "RNA")
 
 }

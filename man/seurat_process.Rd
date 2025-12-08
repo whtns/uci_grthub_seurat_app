@@ -6,7 +6,7 @@
 \usage{
 seurat_process(
   seu,
-  assay = "gene",
+  assay = "RNA",
   resolution = 0.6,
   reduction = "pca",
   organism = "human",

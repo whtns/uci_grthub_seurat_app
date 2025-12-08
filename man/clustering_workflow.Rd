@@ -14,6 +14,8 @@ clustering_workflow(
 )
 }
 \arguments{
+\item{seu}{seurat object}
+
 \item{excluded_cells}{named list of cells to exclude}
 
 \item{resolution}{resolution(s) to use for clustering cells}
@@ -21,8 +23,6 @@ clustering_workflow(
 \item{organism}{Organism}
 
 \item{...}{}
-
-\item{feature_seus}{list of seurat objects named according to feature of interest ("gene" or "transcript")}
 }
 \description{
 Cluster and Reduce Dimensions of a seurat object

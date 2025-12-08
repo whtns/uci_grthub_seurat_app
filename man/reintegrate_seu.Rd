@@ -28,6 +28,6 @@ reintegrate_seu(
 }
 }
 \examples{
-panc8$batch <- panc8$gene$tech
+panc8$batch <- panc8$RNA$tech
 reintegrate_seu(panc8)
 }

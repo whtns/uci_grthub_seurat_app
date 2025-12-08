@@ -6,7 +6,7 @@
 \usage{
 seurat_reduce_dimensions(
   seu,
-  assay = "gene",
+  assay = "RNA",
   reduction = "pca",
   legacy_settings = FALSE,
   ...

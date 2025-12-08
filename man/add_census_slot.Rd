@@ -4,7 +4,7 @@
 \alias{add_census_slot}
 \title{add census assay to a seurat object}
 \usage{
-add_census_slot(seu, assay = "gene", slot = "counts")
+add_census_slot(seu, assay = "RNA", slot = "counts")
 }
 \arguments{
 \item{seu}{seurat object}

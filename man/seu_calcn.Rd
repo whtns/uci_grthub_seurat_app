@@ -4,12 +4,12 @@
 \alias{seu_calcn}
 \title{Calculate Read Count Metrics for a Seurat object}
 \usage{
-seu_calcn(seu, assay = "gene", slot = "counts")
+seu_calcn(seu, assay = "RNA", slot = "counts")
 }
 \arguments{
 \item{seu}{A seurat object}
 
-\item{assay}{Assay to use, Default = "gene"}
+\item{assay}{Assay to use, Default = "RNA"}
 
 \item{slot}{}
 }

@@ -7,7 +7,7 @@
 merge_loom(
   object,
   loom_path,
-  assay = "gene",
+  assay = "RNA",
   fit.quantile = 0.05,
   check_loom = FALSE
 )
@@ -27,7 +27,7 @@ merge_loom(
 a SingleCellExperiment object with RNA velocity calculated
 }
 \description{
-run scvelo on a gene or transcript level object
+run scvelo on a RNA level object
 }
 \examples{
 \donttest{

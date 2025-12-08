@@ -16,8 +16,8 @@ Save seurat object to \if{html}{\out{<project>}}/output/sce/\if{html}{\out{<feat
 }
 \examples{
 \dontrun{
-save_seurat(gene = feature_seus$gene, transcript = feature_seus$transcript, proj_dir = proj_dir)
+save_seurat(seu = feature_seus, proj_dir = proj_dir)
 
-save_seurat(gene = feature_seus$gene, transcript = feature_seus$transcript, prefix = "remove_nonPRs", proj_dir = proj_dir)
+save_seurat(seu = feature_seus, prefix = "remove_nonPRs", proj_dir = proj_dir)
 }
 }
