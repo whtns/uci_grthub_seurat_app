@@ -631,7 +631,7 @@ swap_counts_from_feature <- function(cds, featureType) {
 #' @examples
 convert_seu_list_to_multimodal <- function(seu_list) {
     if ("gene" %in% names(seu_list)) {
-        multimodal_seu <- seu_list$gene
+        multimodal_seu <- seu_list$RNA
     } else if ("RNA" %in% names(seu_list)) {
         multimodal_seu <- seu_list$RNA
     } else {
@@ -675,8 +675,8 @@ convert_v3_to_v5 <- function(seu_v3) {
         meta <- seu_v3@meta.data
 
         if ("gene" %in% names(seu_v3@assays)) {
-             counts <- seu_v3$gene@counts
-             data <- seu_v3$gene@data
+             counts <- seu_v3$RNA@counts
+             data <- seu_v3$RNA@data
         } else {
              counts <- seu_v3$RNA@counts
              data <- seu_v3$RNA@data

@@ -64,7 +64,7 @@ load_counts_by_tximport <- function(proj_dir, type = "salmon", countsFromAbundan
 
     sample_names <- fs::path_file(fs::path_dir(sample_paths))
 
-    txi_features <- purrr::map(list(gene = txi_genes, transcript = txi_transcripts), ~ set_colnames_txi(.x, sample_names))
+    txi_features <- purrr::map(list(RNA = txi_genes, transcript = txi_transcripts), ~ set_colnames_txi(.x, sample_names))
 }
 
 
@@ -99,7 +99,7 @@ load_meta <- function(proj_dir) {
 #'
 #' @examples
 seu_from_tximport <- function(txi, meta_tbl, ...) {
-    gene_expression <- as.matrix(txi$gene$counts)
+    gene_expression <- as.matrix(txi$RNA$counts)
     expid <- gsub("-[0-9]*", "", colnames(gene_expression))
 
     featuredata <- data.frame(
@@ -201,9 +201,9 @@ filter_low_rc_cells <- function(seu, read_thresh = 1e5) {
 #'
 #' @examples
 #' \dontrun{
-#' save_seurat(gene = feature_seus$gene, transcript = feature_seus$transcript, proj_dir = proj_dir)
+#' save_seurat(seu = feature_seus, proj_dir = proj_dir)
 #'
-#' save_seurat(gene = feature_seus$gene, transcript = feature_seus$transcript, prefix = "remove_nonPRs", proj_dir = proj_dir)
+#' save_seurat(seu = feature_seus, prefix = "remove_nonPRs", proj_dir = proj_dir)
 #' }
 save_seurat <- function(seu, prefix = "unfiltered", proj_dir = getwd()) {
     seurat_dir <- fs::path(proj_dir, "output", "seurat")

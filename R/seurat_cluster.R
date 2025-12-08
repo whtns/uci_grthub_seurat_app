@@ -121,7 +121,7 @@ enframe_markers <- function(marker_table) {
 #'
 #' @examples
 #'
-#' seu <- stash_marker_features(metavar = "batch", seu, seurat_assay = "gene")
+#' seu <- stash_marker_features(metavar = "batch", seu, seurat_assay = "RNA")
 #'
 stash_marker_features <- function(metavar, seu, seurat_assay, top_n = 200, p_val_cutoff = 0.5) {
     message(paste0("stashing presto markers for ", metavar))

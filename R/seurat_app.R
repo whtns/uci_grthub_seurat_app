@@ -825,11 +825,11 @@ seuratApp <- function(preset_project, appTitle = "seuFLViz", organism_type = "hu
 
                 marker_genes[marker_genes %in% rownames(seu())]
             } else if (input$priorGeneSet == "Mitochondrial") {
-                marker_genes <- mito_features[[organism_type()]][["gene"]]
+                marker_genes <- mito_features[[organism_type()]][["RNA"]]
 
                 marker_genes[marker_genes %in% rownames(seu())]
             } else if (input$priorGeneSet == "Ribosomal") {
-                marker_genes <- ribo_features[[organism_type()]][["gene"]]
+                marker_genes <- ribo_features[[organism_type()]][["RNA"]]
 
                 marker_genes[marker_genes %in% rownames(seu())]
             }

@@ -12,8 +12,8 @@
 #' annotate_cell_cycle(panc8, organism = "human")
 #' annotate_cell_cycle(baron2016singlecell, organism = "mouse")
 annotate_cell_cycle <- function(seu, organism = "human", ...) {
-    # setdefaultassay to "gene"
-    # Seurat::DefaultAssay(seu) <- "gene"
+    # setdefaultassay to "RNA"
+    # Seurat::DefaultAssay(seu) <- "RNA"
 
     s_genes <- cc.genes$s.genes
     g2m_genes <- cc.genes$g2m.genes
@@ -106,7 +106,7 @@ transcripts_to_genes <- function(transcripts, organism = "human") {
 #'
 #' @examples
 add_read_count_col <- function(seu, thresh = 1e5) {
-    rc <- seu[["nCount_gene"]] < thresh
+    rc <- seu[["nCount_RNA"]] < thresh
 
     seu <- Seurat::AddMetaData(
         object = seu,
@@ -129,7 +129,7 @@ add_read_count_col <- function(seu, thresh = 1e5) {
 #' @examples
 #' add_percent_mito(panc8)
 #' add_percent_mito(baron2016singlecell, organism = "mouse")
-add_percent_mito <- function(seu, organism = organism, seurat_assay = "gene") {
+add_percent_mito <- function(seu, organism = organism, seurat_assay = "RNA") {
 
     seu[["percent.mt"]] <- PercentageFeatureSet(seu, pattern = "^MT-", assay = seurat_assay)
 

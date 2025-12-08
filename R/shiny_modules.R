@@ -1232,8 +1232,8 @@ allTranscripts <- function(input, output, session, seu,
 
     # observe({
     #     req(seu())
-    #     updateSelectizeInput(session, "compositionGene", choices = rownames(seu()[["gene"]]), selected = "RXRG", server = TRUE)
-    #     updateSelectizeInput(session, "embeddingGene", choices = rownames(seu()[["gene"]]), selected = "RXRG", server = TRUE)
+    #     updateSelectizeInput(session, "compositionGene", choices = rownames(seu()[["RNA"]]), selected = "RXRG", server = TRUE)
+    #     updateSelectizeInput(session, "embeddingGene", choices = rownames(seu()[["RNA"]]), selected = "RXRG", server = TRUE)
 
     #     formatted_col_names <- colnames(seu()@meta.data) %>%
     #         make_seuFLViz_clean_names()
@@ -2181,9 +2181,9 @@ techInfo <- function(input, output, session, seu) {
                 "<strong><u>Gene lists</u></strong>",
                 "<ul>",
                 # "<li><b>Mitochondrial genes:</b> ",
-                # paste0(mito_features[[misc()$experiment$organism]][["gene"]], collapse = ", "),
+                # paste0(mito_features[[misc()$experiment$organism]][["RNA"]], collapse = ", "),
                 # "<li><b>Ribosomal genes:</b> ",
-                # paste0(ribo_features[[misc()$experiment$organism]][["gene"]], collapse = ", "),
+                # paste0(ribo_features[[misc()$experiment$organism]][["RNA"]], collapse = ", "),
                 "<li><b>S phase genes:</b> ",
                 paste0(cc.genes$s.genes, collapse = ", "),
                 "<li><b>G2M phase genes:</b> ",

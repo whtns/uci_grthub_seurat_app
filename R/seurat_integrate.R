@@ -160,7 +160,7 @@ seurat_integrate <- function(seu_list, method = "cca", organism = "human", ...) 
 #' @examples
 seurat_v5_integrate <- function(seu, method = "cca", organism = "human", ...) {
 
-  seu[["integrated"]] <- split(seu[["gene"]], f = seu$batch)
+  seu[["integrated"]] <- split(seu[["RNA"]], f = seu$batch)
 
   DefaultAssay(seu) <- "integrated"
 
@@ -317,7 +317,7 @@ load_seurat_from_proj <- function(proj_dir, ...) {
 #' @export
 #'
 #' @examples
-seurat_reduce_dimensions <- function(seu, assay = "gene", reduction = "pca", legacy_settings = FALSE, ...) {
+seurat_reduce_dimensions <- function(seu, assay = "RNA", reduction = "pca", legacy_settings = FALSE, ...) {
     if ("integrated" %in% names(seu@assays)) {
         assay <- "integrated"
     } else {
@@ -442,10 +442,10 @@ filter_merged_seu <- function(seu, filter_var, filter_val, .drop = .drop) {
 #' @export
 #'
 #' @examples
-#' panc8$batch <- panc8$gene$tech
+#' panc8$batch <- panc8$RNA$tech
 #' reintegrate_seu(panc8)
 reintegrate_seu <- function(seu, feature = "gene", suffix = "", reduction = "pca", algorithm = 1, ...) {
-    Seurat::DefaultAssay(seu) <- "gene"
+    Seurat::DefaultAssay(seu) <- "RNA"
 
     organism <- Misc(seu)$experiment$organism
     experiment_name <- Misc(seu)$experiment$experiment_name

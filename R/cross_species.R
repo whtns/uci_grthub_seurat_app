@@ -13,16 +13,17 @@
 #' convert_mouse_seu_to_human(baron2016singlecell)
 convert_mouse_seu_to_human <- function(seu) {
     # transfer default species expression data to a species-specific assay
-    seu[["mouse"]] <- seu[["gene"]]
+    seu[["mouse"]] <- seu[["RNA"]]
 
     new_rownames <- convert_symbols_by_species(src_genes = rownames(seu), src_species = "mouse")
 
     seu_slots <- c("counts", "data", "scale.data", "meta.features")
 
     for (i in seu_slots) {
-        current_slot <- slot(seu@assays[["gene"]], i)
-        if (!(dim(current_slot) == c(0, 0))) {
-            rownames(slot(seu@assays[["gene"]], i)) <- new_rownames
+        current_slot <- slot(seu@assays[["RNA"]], i)
+
+        if (length(current_slot) > 0) {
+            rownames(slot(seu@assays[["RNA"]], i)) <- new_rownames
         }
     }
 
@@ -45,7 +46,7 @@ convert_human_seu_to_mouse <- function(seu, ...) {
 
 
     for (i in seu_slots) {
-        rownames(slot(seu@assays[["gene"]], i)) <- new_rownames
+        rownames(slot(seu@assays[["RNA"]], i)) <- new_rownames
     }
 
     return(seu)
@@ -150,7 +151,7 @@ cross_species_integrate <- function(mouse_seu_list, human_seu_list, excluded_cel
 #' @export
 #'
 #' @examples
-update_human_gene_symbols <- function(seu, assay = "gene") {
+update_human_gene_symbols <- function(seu, assay = "RNA") {
     # browser()
 
     ensdb <- EnsDb.Hsapiens.v86::EnsDb.Hsapiens.v86

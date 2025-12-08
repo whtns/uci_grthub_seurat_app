@@ -18,7 +18,7 @@ query_experiment <- function(object, experiment) {
 
 #' scvelo_assay
 #'
-#' run scvelo on a gene or transcript level object
+#' run scvelo on a RNA level object
 #'
 #' @param object a object
 #' @param loom_path path to matching loom file
@@ -33,7 +33,7 @@ query_experiment <- function(object, experiment) {
 #' chevreul_sce <- chevreuldata::human_gene_transcript_sce()
 #' merge_loom(chevreul_sce, "my.loom")
 #' }
-merge_loom <- function(object, loom_path, assay = "gene", fit.quantile = 0.05, check_loom = FALSE) {
+merge_loom <- function(object, loom_path, assay = "RNA", fit.quantile = 0.05, check_loom = FALSE) {
   loom_object <- import(loom_path, type = "SingleCellLoomExperiment", colnames_attr = "CellID", rownames_attr = "Gene")
 
   colnames(loom_object) <- str_remove(colnames(loom_object), '_Aligned.sortedByCoord.out.bam')
@@ -52,7 +52,7 @@ merge_loom <- function(object, loom_path, assay = "gene", fit.quantile = 0.05, c
 
 #' plot scvelo
 #'
-#' run scvelo on a gene or transcript level object
+#' run scvelo on a RNA level object
 #'
 #' @param object a object
 #' @param mode deterministic, stochastic, or dynamical
@@ -97,7 +97,7 @@ plot_scvelo <- function(object, mode = c("steady_state", "deterministic", "stoch
 
 #' plot  scvelo expression
 #'
-#' run scvelo on a gene or transcript level object
+#' run scvelo on a RNA level object
 #'
 #' @param object a object
 #' @param mode deterministic, stochastic, or dynamical
