@@ -88,5 +88,4 @@ RUN mkdir /root/seuratApp
 # Custom cache invalidation
 ARG CACHEBUST
 COPY ./dockerapp/app.R ./seuratApp/app.R
-COPY ./euler ./euler
-COPY ./index.html ./index.html
+COPY ./dockerapp/index.html ./index.html
