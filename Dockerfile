@@ -85,7 +85,6 @@ RUN R -e 'remotes::install_github("cole-trapnell-lab/monocle3")'
 # # COPY seuFLViz_*.tar.gz /app.tar.gz
 # # RUN remotes::install_local('/app.tar.gz')
 # # CMD R -e 'library(dockerfiler)'
-#
 
 # install dependencies of the euler app
 RUN R -e "install.packages(c('shiny', 'rmarkdown'), repos='https://cloud.r-project.org/')"
@@ -105,7 +104,7 @@ RUN R -e 'install.packages("tidyverse")'
 RUN R -e 'BiocManager::install("InteractiveComplexHeatmap")'
 
 COPY Rprofile.site /usr/local/lib/R/etc/
-RUN R -e 'remotes::install_github("cobriniklab/seuFLViz")'
+RUN R -e 'remotes::install_github("cobriniklab/uci_grthub_seurat_app")'
 # EXPOSE 3838
 
 # # install shinyproxy package with demo shiny application
